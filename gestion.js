@@ -98,7 +98,7 @@ formDepense.addEventListener('submit',(e)=>{
 
 // appel de la fonction create depense 
 createDepense(titre.value,montant.value)
-
+ formDepense.reset()
 
 })
 
@@ -126,6 +126,7 @@ createRevenu(titreRev.value,montantRev.value)
 const ajout_revenu = document.getElementById('ajout_revenu')
 ajout_revenu.style.display = 'none'
     pageAcceuil.style.display = 'block'
+    formRevenu.reset()
 })
 
 // enregistrement des donnes de mes depenses dans le local Storage
