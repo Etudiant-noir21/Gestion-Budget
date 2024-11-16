@@ -214,11 +214,11 @@ function affichageDepense(){
         budget +=parseFloat(revenu.montant) ||0
     })
 
-    budgets.textContent = budget
-    depenses.textContent = depensee
+    budgets.textContent = budget + " FCFA"
+    depenses.textContent = depensee + " FCFA"
     
     // calcule solde 
     solde = budget - depensee
-    soldes.textContent = solde
+    soldes.textContent = solde + ' FCFA'
 }
 affichageDepense()
