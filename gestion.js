@@ -1,6 +1,4 @@
 // recuperation des donnees de depenses 
-const Devoirs = document.querySelectorAll(".devoirs h6");
-const Somme = document.querySelectorAll(".devoirs p");
 const tbodyDepense= document.querySelector("#depenses");
 const tbodyRevenu= document.querySelector("#revenus");
 // formulaire 
@@ -35,6 +33,7 @@ function createDepense(titreDep, montantDep){
 
     btnsupp.addEventListener('click',function(){
         tr.remove()
+        
     })
   
     const trajouter = document.querySelector('.depensetr')
@@ -84,7 +83,7 @@ const btn_ajoutDepense = document.getElementById('btn_ajout')
 // ecouter l'envoie de mon formulaire de depense 
 formDepense.addEventListener('submit',(e)=>{
     e.preventDefault()
-
+    
     // le formulaire
    const ajout_depense = document.getElementById('ajout_depense')
    ajout_depense.style.display = 'none'
@@ -98,8 +97,8 @@ formDepense.addEventListener('submit',(e)=>{
 
 // appel de la fonction create depense 
 createDepense(titre.value,montant.value)
+saveDepense()
  formDepense.reset()
-
 })
 
 // pour le buton ajouter de revenu 
@@ -126,12 +125,100 @@ createRevenu(titreRev.value,montantRev.value)
 const ajout_revenu = document.getElementById('ajout_revenu')
 ajout_revenu.style.display = 'none'
     pageAcceuil.style.display = 'block'
+    saveRevenu()
     formRevenu.reset()
 })
 
 // enregistrement des donnes de mes depenses dans le local Storage
 function saveDepense(){
-    const saveDepenss = JSON.parse(localStorage.getItem("depense"))
+    let saveDepens =JSON.parse(localStorage.getItem("depense"))||[]
+    if(!Array.isArray(saveDepens)){
+        saveDepens = []
+    }
+    const valueTitre = document.getElementById('titre')
+    const valueMontant = document.getElementById('montant')
+
+    if(valueTitre.value && valueMontant.value){
+        const nouveauDepense = {titre: valueTitre.value, montant: valueMontant.value}
+        saveDepens.push(nouveauDepense)
+        // enregistrer mes depenses
+        localStorage.setItem("depense",JSON.stringify(saveDepens))
+    }else{
+        alert("Veuillez remplir les champs")
+
+    }
     
-    localStorage.setItem("depense",JSON.stringify(Devoirs))
 }
+// enregistrement des donnes de mes revenus dans le local Storage
+function saveRevenu(){
+    let saveRevenus =JSON.parse(localStorage.getItem("revenu"))||[]
+    if(!Array.isArray(saveRevenus)){
+        saveRevenus = []
+    }
+    const valueTitreRev = document.getElementById('titreRev')
+    const valueMontantRev = document.getElementById('montantRev')
+
+    if(valueTitreRev.value && valueMontantRev.value){
+        const nouveauRevenu = {titre: valueTitreRev.value, montant: valueMontantRev.value}
+        saveRevenus.push(nouveauRevenu)
+        // enregistrer mes revenus
+        localStorage.setItem("revenu",JSON.stringify(saveRevenus))
+    }else{
+        alert("Veuillez remplir les champs")
+    }
+    
+}
+
+// recuperer mes depenses 
+function getDepense(){
+    let saveDepens =JSON.parse(localStorage.getItem("depense"))||[]
+    if(!Array.isArray(saveDepens)){
+        saveDepens = []
+    }
+    saveDepens.forEach(function(depense){
+        createDepense(depense.titre,depense.montant)
+    })
+}
+getDepense()
+
+// recuperer mes revenus
+function getRevenu(){
+    let saveRevenus =JSON.parse(localStorage.getItem("revenu"))||[]
+    if(!Array.isArray(saveRevenus)){
+        saveRevenus = []
+    }
+    saveRevenus.forEach(function(revenu){
+        createRevenu(revenu.titre,revenu.montant)
+    })
+}
+getRevenu()
+
+// affichage de mes depenses sur la page d'acceuil
+
+const budgets = document.querySelector('.budget')
+const depenses = document.querySelector('.depense')
+const soldes = document.querySelector('.solde')
+
+function affichageDepense(){
+    let budget =0
+    let depensee =0
+    let solde= 0
+
+    let saveDepens = JSON.parse(localStorage.getItem('depense')) ||[]
+    saveDepens.forEach(depense=>{
+        depensee +=parseFloat(depense.montant) || 0
+    })
+
+    let saveRevenu = JSON.parse(localStorage.getItem('revenu')) ||[]
+    saveRevenu.forEach(revenu=>{
+        budget +=parseFloat(revenu.montant) ||0
+    })
+
+    budgets.textContent = budget
+    depenses.textContent = depensee
+    
+    // calcule solde 
+    solde = budget - depensee
+    soldes.textContent = solde
+}
+affichageDepense()
