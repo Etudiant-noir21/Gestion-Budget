@@ -32,7 +32,9 @@ function createDepense(titreDep, montantDep){
     td3.appendChild(btnsupp)
 
     btnsupp.addEventListener('click',function(){
+        // appel de la fonction supprimer 
         tr.remove()
+        supprimerDepense(titreDep)
         
     })
   
@@ -63,6 +65,8 @@ function createRevenu(titreRev, montantRev){
 
     btnsupp.addEventListener('click',function(){
         tr.remove()
+supprimerRevenu(titreRev)
+
     })
 
     const trajouter = document.querySelector('.revenuTr')
@@ -149,6 +153,9 @@ function saveDepense(){
     }
     
 }
+
+
+
 // enregistrement des donnes de mes revenus dans le local Storage
 function saveRevenu(){
     let saveRevenus =JSON.parse(localStorage.getItem("revenu"))||[]
@@ -222,3 +229,35 @@ function affichageDepense(){
     soldes.textContent = solde + ' FCFA'
 }
 affichageDepense()
+
+// fonction supprimer depense
+function supprimerDepense(titreDepense){
+    let saveDepens =JSON.parse(localStorage.getItem("depense"))||[]
+    if(!Array.isArray(saveDepens)){
+        saveDepens = []
+    }
+    saveDepens = saveDepens.filter(function(depense){
+        return depense.titre !== titreDepense
+    })
+    localStorage.setItem("depense",JSON.stringify(saveDepens))
+
+    // mis a jour de mes depenses
+    affichageDepense()
+}
+
+// fonction supprimer revenu
+function supprimerRevenu(titreRevenu){
+    let saveRevenus =JSON.parse(localStorage.getItem("revenu"))||[]
+
+    // transformer mes revenus en tableau
+    if(!Array.isArray(saveRevenus)){
+        saveRevenus = []
+    }
+    saveRevenus = saveRevenus.filter(function(revenu){
+        return revenu.titre !== titreRevenu
+    })
+    localStorage.setItem("revenu",JSON.stringify(saveRevenus))
+    
+    // mis a jour de mes revenus
+    affichageDepense()
+}
